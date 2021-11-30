@@ -415,10 +415,14 @@ void SPextractor::ComputeKeyPointsOctTree(vector<vector<KeyPoint> >& allKeypoint
 
     const float W = 30;
 
+    bool use_cuda = torch::cuda::is_available() && false;
+
+    std::cout << "use_cuda: " << use_cuda << std::endl;
+
     for (int level = 0; level < nlevels; ++level)
     {
         SPDetector detector(model);
-        detector.detect(mvImagePyramid[level], true);
+        detector.detect(mvImagePyramid[level], use_cuda);
 
         const int minBorderX = EDGE_THRESHOLD-3;
         const int minBorderY = minBorderX;

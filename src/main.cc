@@ -9,8 +9,8 @@ int main() {
     int nFeatures = 100;
     float fScaleFactor = 1.2;
     int nLevels = 1;
-    float fIniThFAST = 20;
-    float fMinThFAST = 0;
+    float fIniThFAST = 1;
+    float fMinThFAST = 1;
 
     ORBextractor *mpORBextractor = new ORBextractor(nFeatures,fScaleFactor,nLevels,fIniThFAST,fMinThFAST);
 
