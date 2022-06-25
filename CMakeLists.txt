@@ -8,6 +8,7 @@ endif()
 message("Build type: " ${CMAKE_BUILD_TYPE})
 
 add_definitions(-w)
+add_definitions(-DTORCH_NEW_API)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -Wall  -O3 -march=native -g")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall   -O3 -march=native -g")
@@ -46,6 +47,6 @@ include_directories(include ${OpenCV_INCLUDE_DIRS})
 message(================== ${OpenCV_INCLUDE_DIRS})
 message(================== ${TORCH_LIBRARIES}) 
 
-add_executable(super_point src/main.cc src/SuperPoint.cc src/SPextractor.cc)
+add_executable(super_point src/main.cc src/SuperPoint.cc src/SPextractor.cc src/GCNextractor.cc)
 target_link_libraries(super_point ${OpenCV_LIBS} ${TORCH_LIBRARIES})
 set_property(TARGET super_point PROPERTY CXX_STANDARD 14)
