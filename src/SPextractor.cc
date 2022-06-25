@@ -141,7 +141,7 @@ SPextractor::SPextractor(int _nfeatures, float _scaleFactor, int _nlevels,
     iniThFAST(_iniThFAST), minThFAST(_minThFAST)
 {
     model = make_shared<SuperPoint>();
-    torch::load(model, "../model/superpoint.pt");
+    torch::load(model, "./model/superpoint.pt");
 
 
     mvScaleFactor.resize(nlevels);
@@ -178,7 +178,10 @@ SPextractor::SPextractor(int _nfeatures, float _scaleFactor, int _nlevels,
     mnFeaturesPerLevel[nlevels-1] = std::max(nfeatures - sumFeatures, 0);
 
 }
-
+SPextractor::SPextractor()
+{
+   SPextractor(500,1.2,4,0.015,0.007);
+}
 
 vector<cv::KeyPoint> SPextractor::DistributeOctTree(const vector<cv::KeyPoint>& vToDistributeKeys, const int &minX,
                                        const int &maxX, const int &minY, const int &maxY, const int &N, const int &level)
@@ -415,14 +418,10 @@ void SPextractor::ComputeKeyPointsOctTree(vector<vector<KeyPoint> >& allKeypoint
 
     const float W = 30;
 
-    bool use_cuda = torch::cuda::is_available() && false;
-
-    std::cout << "use_cuda: " << use_cuda << std::endl;
-
     for (int level = 0; level < nlevels; ++level)
     {
         SPDetector detector(model);
-        detector.detect(mvImagePyramid[level], use_cuda);
+        detector.detect(mvImagePyramid[level], false);
 
         const int minBorderX = EDGE_THRESHOLD-3;
         const int minBorderY = minBorderX;
@@ -522,17 +521,17 @@ void SPextractor::operator()( InputArray _image, InputArray _mask, vector<KeyPoi
         return;
 
     Mat image = _image.getMat();
+  
+    //cout << typeToString(image.type());
     assert(image.type() == CV_8UC1 );
-
-    Mat descriptors;
 
     // Pre-compute the scale pyramid
     ComputePyramid(image);
-
+    
+    Mat descriptors;
     vector < vector<KeyPoint> > allKeypoints;
-    ComputeKeyPointsOctTree(allKeypoints, descriptors);
-    cout << "descriptors.rows: " << descriptors.rows << endl;
 
+    ComputeKeyPointsOctTree(allKeypoints, descriptors);
 
     int nkeypoints = 0;
     for (int level = 0; level < nlevels; ++level)
@@ -621,7 +620,7 @@ void SPextractor::ComputePyramid(cv::Mat image)
         Size wholeSize(sz.width + EDGE_THRESHOLD*2, sz.height + EDGE_THRESHOLD*2);
         Mat temp(wholeSize, image.type()), masktemp;
         mvImagePyramid[level] = temp(Rect(EDGE_THRESHOLD, EDGE_THRESHOLD, sz.width, sz.height));
-
+        
         // Compute the resized image
         if( level != 0 )
         {

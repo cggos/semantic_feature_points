@@ -49,9 +49,9 @@ cv::Mat SPdetect(std::shared_ptr<SuperPoint> model, cv::Mat img, std::vector<cv:
 class SPDetector {
 public:
     SPDetector(std::shared_ptr<SuperPoint> _model);
-    void detect(cv::Mat &image, bool use_cuda = false);
+    void detect(cv::Mat &image, bool cuda);
     void getKeyPoints(float threshold, int iniX, int maxX, int iniY, int maxY, std::vector<cv::KeyPoint> &keypoints, bool nms);
-    void computeDescriptors(const std::vector<cv::KeyPoint> &keypoints, cv::Mat &descriptors, bool use_cuda = false);
+    void computeDescriptors(const std::vector<cv::KeyPoint> &keypoints, cv::Mat &descriptors);
 
 private:
     std::shared_ptr<SuperPoint> model;

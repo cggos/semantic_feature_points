@@ -57,7 +57,8 @@ public:
 
     SPextractor(int nfeatures, float scaleFactor, int nlevels,
                  float iniThFAST, float minThFAST);
-
+    SPextractor();
+    
     ~SPextractor(){}
 
     // Compute the SP features and descriptors on an image.
@@ -119,7 +120,7 @@ protected:
     std::shared_ptr<SuperPoint> model;
 };
 
-typedef SPextractor ORBextractor;
+typedef SPextractor FTRextractor;
 
 } //namespace ORB_SLAM
 

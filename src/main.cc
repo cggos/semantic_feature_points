@@ -1,17 +1,20 @@
 #include <torch/torch.h>
 
 #include <iostream>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 
-#include "GCNextractor.h"
+#ifdef BUILD_SP
 #include "SPextractor.h"
+#endif
+#ifdef BUILD_GCN
+#include "GCNextractor.h"
+#endif
 
 using namespace ORB_SLAM2;
 
 int main() {
-  if (!torch::cuda::is_available()) {
-    std::cerr << "torch::cuda is NOT available!" << std::endl;
-    return -1;
-  }
+  std::cout << "torch::cuda: " << torch::cuda::is_available() << std::endl;
 
   cv::Mat img, img_gray;
   img = cv::imread("./imgs/tum00.png");
@@ -24,12 +27,21 @@ int main() {
   int nFeatures = 500;
   float fScaleFactor = 1.2;
   int nLevels = 4;
-  float fIniThFAST = 20;  // 20
-  float fMinThFAST = 7;   // 7
 
-  // ORBextractor *mpFTRextractor = new ORBextractor(nFeatures,fScaleFactor,nLevels,fIniThFAST,fMinThFAST);
-  GCNextractor* mpFTRextractor =
-      new GCNextractor(nFeatures, fScaleFactor, nLevels, fIniThFAST, fMinThFAST, "./GCN2/gcn2_640x480.pt");
+  std::string str_title;
+  FTRextractor* mpFTRextractor;
+#ifdef BUILD_SP
+  str_title = "SuperPoint";
+  float fIniThFAST = 0.015;
+  float fMinThFAST = 0.007;
+  mpFTRextractor = new FTRextractor(nFeatures, fScaleFactor, nLevels, fIniThFAST, fMinThFAST);
+#endif
+#ifdef BUILD_GCN
+  str_title = "GCNv2";
+  float fIniThFAST = 20;
+  float fMinThFAST = 7;
+  mpFTRextractor = new FTRextractor(nFeatures, fScaleFactor, nLevels, fIniThFAST, fMinThFAST, "./GCN2/gcn2_640x480.pt");
+#endif
 
   std::vector<cv::KeyPoint> mvKeys;
   cv::Mat mDescriptors;
@@ -51,7 +63,7 @@ int main() {
     cv::rectangle(img, pt1, pt2, cv::Scalar(0, 255, 0));
     cv::circle(img, pt, 2, cv::Scalar(0, 255, 0), -1);
   }
-  cv::imshow("features", img);
+  cv::imshow(str_title, img);
   cv::waitKey(0);
 
   return 0;
