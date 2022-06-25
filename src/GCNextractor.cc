@@ -157,7 +157,7 @@ void nms(cv::Mat det, cv::Mat desc, std::vector<cv::KeyPoint>& pts, cv::Mat& des
 
 
 GCNextractor::GCNextractor(int _nfeatures, float _scaleFactor, int _nlevels,
-         int _iniThFAST, int _minThFAST):
+         int _iniThFAST, int _minThFAST, const std::string &str_model):
     nfeatures(_nfeatures), scaleFactor(_scaleFactor), nlevels(_nlevels),
     iniThFAST(_iniThFAST), minThFAST(_minThFAST)
 {
@@ -214,7 +214,7 @@ GCNextractor::GCNextractor(int _nfeatures, float _scaleFactor, int _nlevels,
     }
 
     const char *net_fn = getenv("GCN_PATH");
-    net_fn = (net_fn == nullptr) ? "../GCN2/gcn2_640x480.pt" : net_fn;
+    net_fn = (net_fn == nullptr) ? str_model.c_str() : net_fn;
     module = std::make_shared<torch::jit::script::Module>(torch::jit::load(net_fn));
 
 }

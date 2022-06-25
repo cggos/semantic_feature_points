@@ -14,7 +14,7 @@ int main() {
   }
 
   cv::Mat img, img_gray;
-  img = cv::imread("../imgs/tum00.png");
+  img = cv::imread("./imgs/tum00.png");
   if (img.empty()) {
     std::cerr << "img empty!!!" << std::endl;
     return -1;
@@ -28,7 +28,8 @@ int main() {
   float fMinThFAST = 7;   // 7
 
   // ORBextractor *mpFTRextractor = new ORBextractor(nFeatures,fScaleFactor,nLevels,fIniThFAST,fMinThFAST);
-  GCNextractor* mpFTRextractor = new GCNextractor(nFeatures, fScaleFactor, nLevels, fIniThFAST, fMinThFAST);
+  GCNextractor* mpFTRextractor =
+      new GCNextractor(nFeatures, fScaleFactor, nLevels, fIniThFAST, fMinThFAST, "./GCN2/gcn2_640x480.pt");
 
   std::vector<cv::KeyPoint> mvKeys;
   cv::Mat mDescriptors;
