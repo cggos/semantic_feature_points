@@ -56,7 +56,7 @@ public:
     enum {HARRIS_SCORE=0, FAST_SCORE=1 };
 
     SPextractor(int nfeatures, float scaleFactor, int nlevels,
-                 float iniThFAST, float minThFAST);
+                 float iniThFAST, float minThFAST, const std::string &str_model);
     SPextractor();
     
     ~SPextractor(){}
@@ -119,8 +119,6 @@ protected:
 
     std::shared_ptr<SuperPoint> model;
 };
-
-typedef SPextractor FTRextractor;
 
 } //namespace ORB_SLAM
 

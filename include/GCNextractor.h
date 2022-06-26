@@ -99,8 +99,6 @@ protected:
     std::shared_ptr<torch::jit::script::Module> module;
 };
 
-typedef GCNextractor FTRextractor;
-
 } //namespace ORB_SLAM
 
 #endif

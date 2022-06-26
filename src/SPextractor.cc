@@ -136,12 +136,12 @@ void ExtractorNode::DivideNode(ExtractorNode &n1, ExtractorNode &n2, ExtractorNo
 
 
 SPextractor::SPextractor(int _nfeatures, float _scaleFactor, int _nlevels,
-         float _iniThFAST, float _minThFAST):
+         float _iniThFAST, float _minThFAST, const std::string &str_model):
     nfeatures(_nfeatures), scaleFactor(_scaleFactor), nlevels(_nlevels),
     iniThFAST(_iniThFAST), minThFAST(_minThFAST)
 {
     model = make_shared<SuperPoint>();
-    torch::load(model, "./model/superpoint.pt");
+    torch::load(model, str_model);
 
 
     mvScaleFactor.resize(nlevels);
@@ -180,7 +180,7 @@ SPextractor::SPextractor(int _nfeatures, float _scaleFactor, int _nlevels,
 }
 SPextractor::SPextractor()
 {
-   SPextractor(500,1.2,4,0.015,0.007);
+   SPextractor(500,1.2,4,0.015,0.007, "./model/superpoint.pt");
 }
 
 vector<cv::KeyPoint> SPextractor::DistributeOctTree(const vector<cv::KeyPoint>& vToDistributeKeys, const int &minX,
